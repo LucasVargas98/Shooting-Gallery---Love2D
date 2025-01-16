@@ -60,21 +60,40 @@ function love.draw()
 end
 
 function love.mousepressed(x, y, button, isTouch, pressed) --Funçao para inputs de mouse
+        
+    --implementacao para que agora ao pressionar o direito do mouse o jogador ganhe dois pontos e se clicar errado perca 1 ponto\\\\\\\\\\\\\\\\
+       
+        if gameState == 2 then
+                local mouseToTarget = distanceBetween(x,y, target.x, target.y)
 
-        if  button == 1 and gameState == 2 then
-            local mouseToTarget = distanceBetween(x,y, target.x, target.y)
             if mouseToTarget < target.radius then
-                score = score + 1
+
+                if button == 1 then --botao esquerdo do mouse
+                        score = score + 1
+
+                elseif button == 2 then --botao direito do mouse
+                        score = score + 2
+                        timer = timer - 1
+                    
+                end
+
                 target.x = math.random(target.radius, love.graphics.getWidth() - target.radius)
                 target.y = math.random(target.radius, love.graphics.getHeight() - target.radius)
-            end
+
+            elseif score > 0 then -- se o jogador errar o alvo, perdera 1 ponto
+                score = score - 1
+        end           
+            
+
         elseif button == 1 and gameState == 1 then
             gameState = 2
             timer = 10
             score = 0
         end
+
+        
 end
 
 function distanceBetween(x1, y1, x2,y2) -- calcula a distancia entre o mouse e alvo
     return math.sqrt((x2-x1)^2 + (y2 - y1)^2) -- formula para calcular a distancia
-end 
+end
